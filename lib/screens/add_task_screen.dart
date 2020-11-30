@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 import '../helpers/database_helper.dart';
 import '../models/task_model.dart';
@@ -28,14 +27,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String _priority;
   DateTime _date = DateTime.now();
   String _imageEncoded;
-  var _image;
+  Image _image;
   TextEditingController _dateController = TextEditingController();
 
   final DateFormat _dateFormatter = DateFormat('dd MMM, yyyy');
   final List<String> _priorities = ['Low', 'Medium', 'High'];
 
   @override
-  void initState() {
+  initState() {
     super.initState();
 
     if (widget.task != null) {
@@ -43,8 +42,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _date = widget.task.date;
       _priority = widget.task.priority;
       _imageEncoded = widget.task.imageEncoded;
-      if (_imageEncoded != null)
-        _image = fileFromImageBase64(_imageEncoded);
+      if (_imageEncoded != null) _image = imageFromBase64String(_imageEncoded);
     }
 
     _dateController.text = _dateFormatter.format(_date);
@@ -63,15 +61,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  static File fileFromImageBase64(String base64String, DateTime now) {
-    // img64 = iVBORw0KGgoAAAANSUhEUgAAB...
-    final decodedBytes = base64Decode(base64String);
-
-    var file = File("$now.jpeg");
-    file.writeAsBytesSync(decodedBytes);
-
-    return file;
-  }
 
   static Uint8List dataFromBase64String(String base64String) {
     return base64Decode(base64String);
@@ -82,32 +71,31 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   _imgFromCamera() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50);
+    final picker = ImagePicker();
+    PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery);
+    File image = File(pickedFile.path);
 
-
-// Step 2: Check for valid file
     if (image == null) return;
 
     String imgString = base64String(image.readAsBytesSync());
+
     setState(() {
       _imageEncoded = imgString;
-      _image = image;
+      _image = imageFromBase64String(imgString);
     });
   }
 
   _imgFromGallery() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
+    final picker = ImagePicker();
+    PickedFile pickedFile = await picker.getImage(source: ImageSource.camera);
+    File image = File(pickedFile.path);
 
-// Step 2: Check for valid file
     if (image == null) return;
-
 
     String imgString = base64String(image.readAsBytesSync());
     setState(() {
       _imageEncoded = imgString;
-      _image = image;
+      _image = imageFromBase64String(imgString);
     });
   }
 
@@ -228,13 +216,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           backgroundColor: Color(0xffFDCF09),
                           child: _image != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image.file(
-                                    _image,
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.fitHeight,
-                                  ),
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.memory(
+                              base64Decode(_imageEncoded),
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.fitHeight,
+                            ),
                                 )
                               : Container(
                                   decoration: BoxDecoration(

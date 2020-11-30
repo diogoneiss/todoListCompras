@@ -115,7 +115,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'My Tasks',
+                        'Needed itens',
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 40.0,
@@ -124,7 +124,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                       ),
                       SizedBox(height: 10.0),
                       Text(
-                        '$completedTaskCount of ${snapshot.data.length}',
+                        '$completedTaskCount of ${snapshot.data.length} bought',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 20.0,
