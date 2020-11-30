@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 import '../helpers/database_helper.dart';
 import '../models/task_model.dart';
 import 'dart:io';
-
+import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
 class AddTaskScreen extends StatefulWidget {
   final Function updateTaskList;
@@ -21,7 +27,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   String _title = '';
   String _priority;
   DateTime _date = DateTime.now();
-  File _image;
+  String _imageEncoded;
+  var _image;
   TextEditingController _dateController = TextEditingController();
 
   final DateFormat _dateFormatter = DateFormat('dd MMM, yyyy');
@@ -35,6 +42,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _title = widget.task.title;
       _date = widget.task.date;
       _priority = widget.task.priority;
+      _imageEncoded = widget.task.imageEncoded;
+      if (_imageEncoded != null)
+        _image = fileFromImageBase64(_imageEncoded);
     }
 
     _dateController.text = _dateFormatter.format(_date);
@@ -46,11 +56,42 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     super.dispose();
   }
 
+  static Image imageFromBase64String(String base64String) {
+    return Image.memory(
+      base64Decode(base64String),
+      fit: BoxFit.fill,
+    );
+  }
+
+  static File fileFromImageBase64(String base64String, DateTime now) {
+    // img64 = iVBORw0KGgoAAAANSUhEUgAAB...
+    final decodedBytes = base64Decode(base64String);
+
+    var file = File("$now.jpeg");
+    file.writeAsBytesSync(decodedBytes);
+
+    return file;
+  }
+
+  static Uint8List dataFromBase64String(String base64String) {
+    return base64Decode(base64String);
+  }
+
+  static String base64String(Uint8List data) {
+    return base64Encode(data);
+  }
+
   _imgFromCamera() async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
+
+// Step 2: Check for valid file
+    if (image == null) return;
+
+    String imgString = base64String(image.readAsBytesSync());
     setState(() {
+      _imageEncoded = imgString;
       _image = image;
     });
   }
@@ -58,14 +99,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   _imgFromGallery() async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 50);
+
+// Step 2: Check for valid file
+    if (image == null) return;
+
+
+    String imgString = base64String(image.readAsBytesSync());
     setState(() {
+      _imageEncoded = imgString;
       _image = image;
     });
   }
 
   _handleDatePicker() async {
     final DateTime date = await showDatePicker(
-      context: context,
+      context: this.context,
       initialDate: _date,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
@@ -81,7 +129,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   _delete() {
     DatabaseHelper.instance.deleteTask(widget.task.id);
     widget.updateTaskList();
-    Navigator.pop(context);
+    Navigator.pop(this.context);
   }
 
   _submit() {
@@ -89,7 +137,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _formKey.currentState.save();
       print('$_title, $_date, $_priority');
 
-      Task task = Task(title: _title, date: _date, priority: _priority);
+      Task task = Task(title: _title,
+          date: _date,
+          priority: _priority,
+          imageEncoded: _imageEncoded);
       if (widget.task == null) {
         // Insert the task to our user's database
         task.status = 0;
@@ -101,7 +152,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         DatabaseHelper.instance.updateTask(task);
       }
       widget.updateTaskList();
-      Navigator.pop(context);
+      Navigator.pop(this.context);
     }
   }
 

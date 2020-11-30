@@ -1,19 +1,23 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Task {
   int id;
   String title;
   DateTime date;
   String priority;
-  File _image;
+
+  String imageEncoded;
+
   int status; // 0 = Incomplete, 1 - Complete
 
-  Task({this.id, this.title, this.date, this.priority});
+  Task({this.id, this.title, this.date, this.priority, this.imageEncoded});
 
-  Task.withId({this.id, this.title, this.date, this.priority, this.status});
+  Task.withId(
+      {this.id,
+      this.title,
+      this.date,
+      this.priority,
+      this.status,
+      this.imageEncoded});
 
   Map<String, dynamic> toMap() {
     final map = Map<String, dynamic>();
@@ -24,6 +28,7 @@ class Task {
     map['date'] = date.toIso8601String();
     map['priority'] = priority;
     map['status'] = status;
+    map['image'] = imageEncoded;
 
     return map;
   }
@@ -35,6 +40,8 @@ class Task {
       date: DateTime.parse(map['date']),
       priority: map['priority'],
       status: map['status'],
+      imageEncoded: map['image'],
+
     );
   }
 }

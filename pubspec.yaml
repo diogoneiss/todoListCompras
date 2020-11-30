@@ -28,6 +28,11 @@ dependencies:
   path_provider: ^1.6.5
   flutter_audio_recorder:
   image_picker:
+  audioplayers:
+  path:
+  typed_data:
+  convert:
+
 
 
 dev_dependencies:
