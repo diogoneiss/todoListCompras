@@ -201,7 +201,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 SizedBox(height: 20.0),
                 Text(
-                  widget.task == null ? 'Add Task' : 'Update Task',
+                  widget.task == null ? 'Add Item' : 'Update Item',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 40.0,
@@ -244,12 +244,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
-                          style: TextStyle(fontSize: 18.0),
+                          style: TextStyle(fontSize: 16.0),
                           decoration: InputDecoration(
                             labelText: 'Title',
-                            labelStyle: TextStyle(fontSize: 18.0),
+                            labelStyle: TextStyle(fontSize: 16.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -262,7 +262,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
                           readOnly: true,
                           controller: _dateController,
@@ -270,7 +270,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           onTap: _handleDatePicker,
                           decoration: InputDecoration(
                             labelText: 'Date',
-                            labelStyle: TextStyle(fontSize: 18.0),
+                            labelStyle: TextStyle(fontSize: 16.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
@@ -278,12 +278,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: DropdownButtonFormField(
                           isDense: true,
                           icon: Icon(Icons.arrow_drop_down_circle),
                           iconSize: 22.0,
-                          iconEnabledColor: Theme.of(context).primaryColor,
+                          iconEnabledColor: Theme
+                              .of(context)
+                              .primaryColor,
                           items: _priorities.map((String priority) {
                             return DropdownMenuItem(
                               value: priority,
@@ -291,20 +293,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 priority,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 18.0,
+                                  fontSize: 16.0,
                                 ),
                               ),
                             );
                           }).toList(),
-                          style: TextStyle(fontSize: 18.0),
+                          style: TextStyle(fontSize: 16.0),
                           decoration: InputDecoration(
                             labelText: 'Priority',
-                            labelStyle: TextStyle(fontSize: 18.0),
+                            labelStyle: TextStyle(fontSize: 16.0),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          validator: (input) => _priority == null
+                          validator: (input) =>
+                          _priority == null
                               ? 'Please select a priority level'
                               : null,
                           onChanged: (value) {
@@ -317,7 +320,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                       new RecorderExample(),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 20.0),
+                        margin: EdgeInsets.symmetric(vertical: 15.0),
                         height: 60.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
