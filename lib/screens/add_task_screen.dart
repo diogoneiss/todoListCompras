@@ -315,12 +315,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           value: _priority,
                         ),
                       ),
+                      new RecorderExample(),
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 20.0),
                         height: 60.0,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: Theme
+                              .of(context)
+                              .primaryColor,
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: FlatButton(
@@ -431,7 +434,7 @@ class RecorderExampleState extends State<RecorderExample> {
                         }
                       },
                       child: _buildText(_currentStatus),
-                      color: Colors.lightBlue,
+                      color: Colors.redAccent,
                     ),
                   ),
                   new FlatButton(
@@ -452,17 +455,7 @@ class RecorderExampleState extends State<RecorderExample> {
                   ),
                 ],
               ),
-              new Text("Status : $_currentStatus"),
-              new Text('Avg Power: ${_current?.metering?.averagePower}'),
-              new Text('Peak Power: ${_current?.metering?.peakPower}'),
-              new Text("File path of the record: ${_current?.path}"),
-              new Text("Format: ${_current?.audioFormat}"),
-              new Text(
-                  "isMeteringEnabled: ${_current?.metering
-                      ?.isMeteringEnabled}"),
-              new Text("Extension : ${_current?.extension}"),
-              new Text(
-                  "Audio recording duration : ${_current?.duration.toString()}")
+
             ]),
       ),
     );
